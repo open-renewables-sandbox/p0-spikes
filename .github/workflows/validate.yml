@@ -1,0 +1,20 @@
+name: validate-workflow
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  pull_request_review:
+    types: [submitted, dismissed]
+permissions: {}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Decide
+        env:
+          EVENT: ${{ github.event_name }}
+          REVIEW: ${{ github.event.review.body }}
+        run: |
+          echo "event=$EVENT review_body=$REVIEW"
+          if [ "$EVENT" = "pull_request_review" ] && [ "$REVIEW" = "FAIL" ]; then echo "failing on purpose"; exit 1; fi
