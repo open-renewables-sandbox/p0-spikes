@@ -1,11 +1,7 @@
-# p0-spikes probe (V-10b)
+# p0-spikes probe (V-10b, round 2)
 
-Throwaway probe of `@` import forms for file names that contain spaces. Each target file holds one CANARY token.
+Round 2 uses only the escaped-space form, with real-name patterns (hyphen, nested folder, import inside an imported file).
 
-@docs-probe/A raw spaces.md
-@docs-probe/B\ escaped\ spaces.md
-@"docs-probe/C quoted spaces.md"
-@docs-probe/D%20percent%20encoded.md
-@<docs-probe/E angle brackets.md>
 @docs-probe/f-hyphenated.md
-@"docs-probe/sub folder/G nested.md"
+@docs-probe/H\ Spec\ -\ Like\ Name.md
+@docs-probe/sub\ folder/I\ nested\ -\ escaped.md
