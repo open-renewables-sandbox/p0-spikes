@@ -4,7 +4,8 @@ Throwaway verification spikes for build phase P0 of the OKF library template (V-
 
 | ID | Result | Outcome |
 | --- | --- | --- |
-| V-02 | [spikes/V-02-nested-lists](spikes/V-02-nested-lists/RESULT.md) | Python-Markdown part done: two-space does not nest, four-space does; GitHub part pending |
+| V-01 | [spikes/V-01-anchors](spikes/V-01-anchors/RESULT.md) | AD-14 holds; GitHub lower-cases explicit ids; scroll partly unconfirmed |
+| V-02 | [spikes/V-02-nested-lists](spikes/V-02-nested-lists/RESULT.md) | Four-space nests everywhere; two-space differs (GitHub nests, MkDocs and Zensical do not) |
 | V-03 | [spikes/V-03-zensical](spikes/V-03-zensical/RESULT.md) | Zensical 0.0.73 fails check 2 (rooted links); other checks equal |
 | V-04 | [spikes/V-04-docusaurus](spikes/V-04-docusaurus/RESULT.md) | Docusaurus 3.10.2 passes 5 of 6; check 5 fails on reserved `slug`/`id` |
 | V-08 | [spikes/V-08-okf-skills](spikes/V-08-okf-skills/RESULT.md) | Vendorable, same script as Action; no finding codes; tolerates offset-less datetimes |
