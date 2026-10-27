@@ -1,0 +1,21 @@
+name: concurrency-probe
+on:
+  workflow_dispatch:
+    inputs:
+      n:
+        description: Sequence number of this dispatch
+        default: "0"
+permissions: {}
+concurrency:
+  group: revision
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Hold the group
+        run: |
+          echo "dispatch n=${{ inputs.n }} started at $(date -u +%T)"
+          sleep 45
+          echo "dispatch n=${{ inputs.n }} finished at $(date -u +%T)"
