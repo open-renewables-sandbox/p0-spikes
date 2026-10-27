@@ -1,0 +1,38 @@
+name: symlink-check
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag whose archives are inspected
+        default: v0.0.2-p0
+permissions: {}
+jobs:
+  check:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Checkout result for the symlink entry
+        run: |
+          echo "core.symlinks=$(git config --get core.symlinks || echo unset)"
+          git ls-files -s .claude/skills/demo
+          ls -la .claude/skills
+          if [ -L .claude/skills/demo ]; then echo "RESULT: real symlink -> $(readlink .claude/skills/demo)"; else echo "RESULT: not a symlink; content: $(cat .claude/skills/demo)"; fi
+          if [ -f .claude/skills/demo/SKILL.md ]; then echo "RESOLVES: skill file reachable through the entry"; else echo "RESOLVES: no"; fi
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - name: Inspect GitHub's tag archives
+        run: |
+          curl -fsSL -o t.tar.gz "https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.tag }}.tar.gz"
+          curl -fsSL -o t.zip "https://github.com/${{ github.repository }}/archive/refs/tags/${{ inputs.tag }}.zip"
+          uv run --no-project python spikes/V-09-symlinks/inspect_archives.py t.tar.gz t.zip .claude/skills/demo
