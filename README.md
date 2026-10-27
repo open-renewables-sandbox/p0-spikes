@@ -9,6 +9,8 @@ Throwaway verification spikes for build phase P0 of the OKF library template (V-
 | V-03 | [spikes/V-03-zensical](spikes/V-03-zensical/RESULT.md) | Zensical 0.0.73 fails check 2 (rooted links); other checks equal |
 | V-04 | [spikes/V-04-docusaurus](spikes/V-04-docusaurus/RESULT.md) | Docusaurus 3.10.2 passes 5 of 6; check 5 fails on reserved `slug`/`id` |
 | V-08 | [spikes/V-08-okf-skills](spikes/V-08-okf-skills/RESULT.md) | Vendorable, same script as Action; no finding codes; tolerates offset-less datetimes |
+| V-09 | [spikes/V-09-symlinks](spikes/V-09-symlinks/RESULT.md) | Symlinks survive git, archives, Linux, macOS, hosted Windows; a symlink-less Windows checkout leaves a text stub and Claude Code misses the skill |
+| V-10 | [spikes/V-10-spaces](spikes/V-10-spaces/RESULT.md) | Template CLAUDE.md imports do not load; only the escaped-space form worked; GitHub resolves rooted links from the repo root |
 | V-11 | [spikes/V-11-verified-tier](spikes/V-11-verified-tier/RESULT.md) | Tier from any `human:` entry; `ci:` accepted but §7 prefers `process:` |
 | V-12 | [spikes/V-12-reproducible-archive](spikes/V-12-reproducible-archive/RESULT.md) | tar identical on 8 runs; tar.gz differs under zlib-ng (Python 3.14 on Windows) |
 | V-13 | [spikes/V-13-poe-tasks](spikes/V-13-poe-tasks/RESULT.md) | Passed on ubuntu, macOS, Windows × 3.11, 3.14; bare `poe` exits 1 |
