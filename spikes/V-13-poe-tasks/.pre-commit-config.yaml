@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff
+        entry: uv run ruff check --fix scripts tests
+        language: system
+        pass_filenames: false
+      - id: validate
+        name: validate_profile
+        entry: uv run python scripts/validate_profile.py --json
+        language: system
+        pass_filenames: false

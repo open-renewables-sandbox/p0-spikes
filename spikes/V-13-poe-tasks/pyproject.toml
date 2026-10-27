@@ -1,0 +1,40 @@
+[project]
+name = "p0-v13"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = ["poethepoet>=0.30", "pre-commit>=4", "ruff>=0.8", "mypy>=1.13", "pytest>=8"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+strict = true
+
+[tool.poe.tasks.install]
+help = "uv sync --all-groups; pre-commit install"
+sequence = [{ cmd = "uv sync --all-groups" }, { cmd = "pre-commit install" }]
+
+[tool.poe.tasks.lock-check]
+cmd = "uv lock --locked"
+
+[tool.poe.tasks.lint]
+sequence = [{ cmd = "ruff check scripts tests" }, { cmd = "ruff format --check scripts tests" }]
+
+[tool.poe.tasks.types]
+cmd = "mypy scripts/okfprofile"
+
+[tool.poe.tasks.validate]
+cmd = "python scripts/validate_profile.py --json"
+
+[tool.poe.tasks.check]
+sequence = ["lock-check", "lint", "types", "validate"]
+
+[tool.poe.tasks.test]
+cmd = "pytest -q"
+
+[tool.poe.tasks.shell-probe]
+help = "Probes poe's default shell interpreter"
+shell = "echo one && echo two"
