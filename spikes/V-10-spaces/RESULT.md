@@ -1,6 +1,6 @@
 # V-10 Spaces in file names: result
 
-Date: 2026-10-27. Labels: **[Test]** observed. Sessions: V-10a, a fresh Claude Code session with `okf-library-template` as working directory (branch `docs/p0-verification-plan`, read-only); V-10b, a fresh session in p0-spikes with `CLAUDE.md` probes in `docs-probe/` (round 1). Link forms viewed on github.com and built with MkDocs 1.6.1 and Zensical 0.0.73. Round 2 of V-10b (real-name patterns) is pending; see the end.
+Date: 2026-10-27. Labels: **[Test]** observed. Sessions: V-10a, a fresh Claude Code session with `okf-library-template` as working directory (branch `docs/p0-verification-plan`, read-only); V-10b, a fresh session in p0-spikes with `CLAUDE.md` probes in `docs-probe/` (round 1). Link forms viewed on github.com and built with MkDocs 1.6.1 and Zensical 0.0.73. Round 2 of V-10b (real-name patterns) is at the end.
 
 ## Outcome
 
@@ -47,10 +47,12 @@ On github.com a `/`-rooted link resolves from the **repository root**, not from 
 
 ## Feeds
 
-- **P-9 is triggered, in a smaller form than renaming:** the file names can stay (QA-36, QA-67, AD-21) if `CLAUDE.md` uses the escaped form (`@docs/development/requirements/OKF\ Library\ Template\ -\ Software\ Requirements\ Spec.md` style). Round 2 checks that with hyphens and nesting before it is proposed.
+- **P-9 is triggered, in a smaller form than renaming:** the file names can stay (QA-36, QA-67, AD-21) if `CLAUDE.md` uses the escaped form (`@docs/development/requirements/OKF\ Library\ Template\ -\ Software\ Requirements\ Spec.md` style). Round 2 confirmed it with hyphens and nesting.
 - **A new proposed entry, P-15:** I-01's root-relative link rule against GitHub's behaviour. A relative-links-only rule would also remove the Zensical check 2 failure (V-03). I-01, FR2.10 and W-04 check 4 are affected; FR2.10 says links must resolve on the hosting platform, so this is a requirement-level concern for the owner.
 - The link form for names with spaces: `%20` or angle brackets work everywhere tested; raw spaces fail on GitHub.
 
-## Pending: round 2
+## Round 2: escaped form with real-name patterns **[Test]**
 
-`CLAUDE.md` in p0-spikes now holds three escaped-form imports with real-name patterns (hyphens, a folder `sub folder`, and an import inside an imported file), expecting tokens CANARY-F, H, I and J. It needs one more fresh session in p0-spikes; one could not be started automatically in this turn.
+A fresh session in p0-spikes (commit `d74ceca`) with `CLAUDE.md` importing, in the escaped-space form only: `@docs-probe/f-hyphenated.md` (control), `@docs-probe/H\ Spec\ -\ Like\ Name.md` (spaces and a hyphen), and `@docs-probe/sub\ folder/I\ nested\ -\ escaped.md` (nested folder with a space). The file behind H itself imports `@I\ inner\ -\ file.md` (a relative path from its own folder). Before using any tool the session saw **CANARY-F, H, I and J, all present**, so the escaped form works with hyphens, a folder with a space, and an import inside an imported file.
+
+Conclusion: the template's four imports can keep their exact file names if `CLAUDE.md` escapes each space with a backslash. Not tested: the exact four real paths in the template repository (the change belongs in the template's `CLAUDE.md`, which this plan does not edit), and any Claude Code version other than the one running on 2026-10-27.
