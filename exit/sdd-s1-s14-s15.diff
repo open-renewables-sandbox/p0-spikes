@@ -1,0 +1,90 @@
+# Proposed edits to SDD sections 1, 14 and 15 (P0 exit, 2026-10-28). NOT APPLIED.
+# Base: the SDD as committed on main of open-renewables/okf-library-template (3c720fb).
+# Apply, after approval, from the template repository root with: git apply exit/sdd-s1-s14-s15.diff
+# Not in this diff: AD-13, C-07, I-13 and section 1 item 6 (wording follows ADR-001 on approval);
+# I-01, I-08, I-12, W-05 and section 6 (each follows its own proposed entry, see proposed-entries.md).
+diff --git "a/docs/development/architecture/OKF Library Template - Software Design Document.md" "b/docs/development/architecture/OKF Library Template - Software Design Document.md"
+--- "a/docs/development/architecture/OKF Library Template - Software Design Document.md"
++++ "b/docs/development/architecture/OKF Library Template - Software Design Document.md"
+@@ -32,9 +32,9 @@ The design rests on seven choices, recorded as architecture decisions AD-01 to A
+ 6. **Site generator kept open.** One `mkdocs.yml` is built by MkDocs 1.6.1 with Material 9.7.x (blocking) and by Zensical (non-blocking, with output checks). Material for MkDocs reaches end of life on 5 November 2026, so the generator is decided at the end of build phase P0.
+ 7. **Two operating modes.** A library declares `platform: github` or `platform: git-local`. Platform behaviour sits in adapters; in `git-local` mode the library runs on git and Python alone, with provenance from commit trailers, and can later move to GitHub without rewriting history (AD-19, W-12). The same `uv run poe <task>` commands run checks locally and in CI (AD-20).
+ 
+-Build plan (section 14): verification spikes, core tooling, CI and governance, site, release and skills, then a pilot. The template is released as v1.0.0 (stable) only when the pilot gate passes; downstream libraries, starting with the RE risk library, are built from template v1.0.0 or later. Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55, and effort is re-estimated at the end of P0.
++Build plan (section 14): verification spikes, core tooling, CI and governance, site, release and skills, then a pilot. The template is released as v1.0.0 (stable) only when the pilot gate passes; downstream libraries, starting with the RE risk library, are built from template v1.0.0 or later. Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55; at the end of P0 (2026-10-28) the remaining effort for P1 to P4 is re-estimated at 31–46 person-days (section 14).
+ 
+-Thirteen behaviours are not yet verified and are scheduled as spikes before build (section 15). The design documents live in the template's `docs/development/` folder, which is template-only (AD-21). The SRS was aligned with this document on 25 October 2026 (section 16).
++Thirteen behaviours were scheduled as spikes before build (section 15); nine are answered, three (V-05, V-07, V-09) are partly answered and V-06 is carried, each carried part to a named gate (section 14). The design documents live in the template's `docs/development/` folder, which is template-only (AD-21). The SRS was aligned with this document on 25 October 2026 (section 16).
+ 
+ ## 2. Scope and document relationships
+ 
+@@ -889,18 +889,27 @@ NFR5 (content style) is an authoring rule enforced by review and has no componen
+ 
+ ## 14. Build and release plan
+ 
+-The template is built and released to a stable version before any downstream library starts. Effort is indicative, for one maintainer, in person-days **[Inf]**. The figures below are the original estimate (27–41 in total), with P2 raised by 2–3 days for the `git-local` adapter and W-12 (QA-58 to QA-61); the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort is re-estimated at the P0 exit (DDR QA-45).
++The template is built and released to a stable version before any downstream library starts. Effort is indicative, for one maintainer, in person-days **[Inf]**. The figures below are the original estimate (27–41 in total), with P2 raised by 2–3 days for the `git-local` adapter and W-12 (QA-58 to QA-61); the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort was re-estimated at the P0 exit on 2026-10-28 (DDR QA-45): the table below carries the revised figures for P1 to P3, 31–46 person-days for P1 to P4 in total **[Inf]**. The basis is in the P0 re-estimate; the largest uncertainty is P1, which no spike exercised.
+ 
+ | Phase | Content | Effort | Exit |
+ | --- | --- | --- | --- |
+ | Set-up | Create the free GitHub organisation and the public template repository from the `docs/development/` scaffold, adding `LICENSE`, `NOTICE`, `README.md` and `.gitignore`; squash-only merges, read-only workflow token, secret scanning, push protection and Dependabot alerts; `main` ruleset without the `validate` check (runbook `docs/development/operations/runbook-create-template-repository.md`) | 0.5 | Repository public and marked as a template; a test pull request squash-merged; a direct push to `main` refused |
+-| P0 Verification | Spikes V-01 to V-13 in a scratch repository and scratch organisation, separate from the template repository because V-05 and V-07 change rulesets and release settings; site generator decision (V-03, V-04); re-estimate | 2–3 | Each V-item answered; generator decided; design and estimate updated |
+-| P1 Core tooling | `pyproject.toml` with tasks, ruff, mypy, pytest and coverage settings; `.python-version`; `.pre-commit-config.yaml`; `docs/development/` scaffold; `okfprofile`; checks 1–6, change rules and publishing pre-check; vendored okf-skills; `new_concept`, `renumber`, `build_indexes`; fixtures and tests | 10–15 | All finding codes tested; v0.1.0 (alpha) |
+-| P2 CI and governance | `.github/CODEOWNERS`; `validate.yml` with base-branch tooling, then `validate` added as a required check on the `main` ruleset; `revision.yml` and `write_revision` with catch-up, `stale-report.yml`; issue forms; pull request template; `init_library`, `setup_repo` including `--promote`; instantiation self-test (W-10) for both platforms; `git_local` adapter, `release.py`, reproducible archives and a W-12 rehearsal; gitleaks and pip-audit jobs; Python matrix; GitHub App | 8–12 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |
+-| P3 Site, release, skills | `mkdocs.yml` or the chosen generator's configuration; `site.yml`; `release.yml` with the revision gate and `build_bundle`; both skills; `AGENTS.md`, `GOVERNANCE.md`, `README.md`, `NOTICE` | 4–6 | v0.5.0 (beta) |
++| P0 Verification | Spikes V-01 to V-13 in a scratch repository and scratch organisation, separate from the template repository because V-05 and V-07 change rulesets and release settings; site generator decision (V-03, V-04); re-estimate | 2–3 | Done 2026-10-28: each V-item answered or carried to a named gate; generator decided (ADR-001); design and estimate updated |
++| P1 Core tooling | `pyproject.toml` with tasks, ruff, mypy, pytest and coverage settings; `.python-version`; `.pre-commit-config.yaml`; `docs/development/` scaffold; `okfprofile`; checks 1–6, change rules and publishing pre-check; vendored okf-skills; `new_concept`, `renumber`, `build_indexes`; fixtures and tests | 11–16 | All finding codes tested; v0.1.0 (alpha) |
++| P2 CI and governance | `.github/CODEOWNERS`; `validate.yml` with base-branch tooling, then `validate` added as a required check on the `main` ruleset; `revision.yml` and `write_revision` with catch-up, `stale-report.yml`; issue forms; pull request template; `init_library`, `setup_repo` including `--promote`; instantiation self-test (W-10) for both platforms; `git_local` adapter, `release.py`, reproducible archives and a W-12 rehearsal; gitleaks and pip-audit jobs; Python matrix; GitHub App | 10–15 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |
++| P3 Site, release, skills | `mkdocs.yml` or the chosen generator's configuration; `site.yml`; `release.yml` with the revision gate and `build_bundle`; both skills; `AGENTS.md`, `GOVERNANCE.md`, `README.md`, `NOTICE` | 5–7 | v0.5.0 (beta) |
+ | P4 Pilot and hardening | Instantiate a pilot library; author about 20 concepts of its primary type with scope notes, vocabulary values and glossary entries; second person times W-01; agent run | 5–8 | Stable gate met; v1.0.0 |
+ 
+ P1 starts only when the SRS is aligned with this document (DDR QA-35; done 25 October 2026).
++Verification items carried past P0 (decided 2026-10-28; each has a gate, and the v1.0.0 gate below still requires them closed):
++
++| Item | Part carried | Gate |
++| --- | --- | --- |
++| V-05 | App "always" bypass on a protected `main` (5a); approval, stale approval and review `commit_id` API shape (5c) | Before `revision.yml` is written, at the start of P2 |
++| V-06 | Second person times W-01: platform steps first, then the whole | End of P2 (platform steps); P4 (full, FR6.1) |
++| V-07 | Cloudflare Pages access-policy limits on the free plan; immutable releases on a private repository | Only if a library wants a private preview or release; otherwise none |
++| V-09 | A real symlink against Claude Code; "Use this template" keeps the symlink | Start of P3; the copy fallback decision comes before P2 |
++
+ 
+ Template v1.0.0 (stable) gate:
+ 
+@@ -913,21 +922,21 @@ Template v1.0.0 (stable) gate:
+ 
+ ## 15. Verification items
+ 
+-| ID | Item | Outcome needed |
+-| --- | --- | --- |
+-| V-01 | GitHub rendering of `<a id>` anchors placed before or inside headings, duplicate ids with automatic slugs, non-ASCII and parenthesised terms | Confirm AD-14 placement and duplicate-id rule |
+-| V-02 | Two-space versus four-space nested list items in Python-Markdown (MkDocs, Zensical) and GitHub | Confirm I-01 indentation rule |
+-| V-03 | Zensical: `/`-rooted links (failed 18 October), `validation`, `strict`, `extra.status`, `extra.social`, `content.action.edit`, footnotes, `attr_list`, `toc`, tags; whether MkDocs tolerates Zensical-only theme keys | Generator decision at the P0 exit (C-07) |
+-| V-04 | Docusaurus 3.10 in `detect` mode on three real concepts (fallback generator) | Generator decision at the P0 exit |
+-| V-05 | Ruleset with admin "for pull requests only" bypass and App "always" bypass on a free organisation; required-check naming across `pull_request` and `pull_request_review`; how an admin bypass merge and a review's commit id appear in the API; concurrency-group cancellation of pending runs; whether a fork of a public repository can be made private | Confirm section 11 and W-05 inference |
+-| V-06 | Second person performs W-01 end to end, including the App | FR6.1 measured |
+-| V-07 | Immutable releases on GitHub Free; Cloudflare Pages access policy limits on the free plan | Confirm C-10 and alpha or beta options |
+-| V-08 | okf-skills mapping of its findings to `OKF1xx`, its behaviour on generated `index.md` files, and running the vendored validator outside the Action | Confirm AD-08 integration |
+-| V-09 | Claude Code discovers skills through per-skill symlinks in `.claude/skills/`; symlinks survive "Use this template", the release archive and Windows checkouts (where git may write symlinks as plain files) | Confirm AD-16; otherwise `init_library.py` copies the skills |
+-| V-10 | `CLAUDE.md` imports and Markdown links resolve to files whose names contain spaces (`%20` or angle-bracket link targets), including from `docs/development/` subfolders | Confirm the file naming in `docs/development/` (section 6). First check: open Claude Code in the template repository and ask for a summary of the SRS |
+-| V-12 | Reproducible archive: the same tag rebuilt on Linux, macOS and Windows, on Python 3.11 and 3.14, gives the same SHA-256 (tarfile and gzip settings in I-12) | Confirm I-12 and W-12 step 5 |
+-| V-13 | poethepoet tasks run unchanged on Windows, macOS and Linux; `uv run poe install` works on a fresh clone; `repo: local` pre-commit hooks run through `uv run` on all three | Confirm I-16, I-17 |
+-| V-11 | How OKF derives a trust tier from `verified`: from the latest entry or any entry, and which non-human actor prefix denotes machine confirmation | Confirm the I-08 `verified` mapping |
++| ID | Item | Outcome needed | Outcome (2026-10-28) |
++| --- | --- | --- | --- |
++| V-01 | GitHub rendering of `<a id>` anchors placed before or inside headings, duplicate ids with automatic slugs, non-ASCII and parenthesised terms | Confirm AD-14 placement and duplicate-id rule | Confirmed 2026-10-27: AD-14 holds on GitHub; GitHub lower-cases explicit ids, so ids are lower case. **[Test]** |
++| V-02 | Two-space versus four-space nested list items in Python-Markdown (MkDocs, Zensical) and GitHub | Confirm I-01 indentation rule | Confirmed: four-space nesting is identical on GitHub, Python-Markdown (MkDocs, Zensical) and Docusaurus; two-space differs. **[Test]** |
++| V-03 | Zensical: `/`-rooted links (failed 18 October), `validation`, `strict`, `extra.status`, `extra.social`, `content.action.edit`, footnotes, `attr_list`, `toc`, tags; whether MkDocs tolerates Zensical-only theme keys | Generator decision at the P0 exit (C-07) | Zensical 0.0.73 fails FR8.2 check 2 (`/`-rooted links); other tested features equal. Option A (AD-13) with Zensical in parallel; ADR-001 (Proposed). **[Test]** |
++| V-04 | Docusaurus 3.10 in `detect` mode on three real concepts (fallback generator) | Generator decision at the P0 exit | Docusaurus 3.10.2 passes five checks and fails check 5 (`slug`, `id`); not adopted. **[Test]** |
++| V-05 | Ruleset with admin "for pull requests only" bypass and App "always" bypass on a free organisation; required-check naming across `pull_request` and `pull_request_review`; how an admin bypass merge and a review's commit id appear in the API; concurrency-group cancellation of pending runs; whether a fork of a public repository can be made private | Confirm section 11 and W-05 inference | Partly confirmed: admin bypass, check naming, concurrency cancellation, fork privacy **[Doc]**; commit-to-pull-request lookup can lag the push. App bypass and approval cases carried to the start of P2. **[Test]** |
++| V-06 | Second person performs W-01 end to end, including the App | FR6.1 measured | Carried (section 14): platform steps end of P2, full timing in P4. |
++| V-07 | Immutable releases on GitHub Free; Cloudflare Pages access policy limits on the free plan | Confirm C-10 and alpha or beta options | Immutable releases confirmed on Free for a public repository. Private repository and Cloudflare limits carried. **[Test]** |
++| V-08 | okf-skills mapping of its findings to `OKF1xx`, its behaviour on generated `index.md` files, and running the vendored validator outside the Action | Confirm AD-08 integration | Confirmed: one script, the same one the Action runs; no finding codes, so mapping is by message text; offset-less datetimes pass. **[Test]** |
++| V-09 | Claude Code discovers skills through per-skill symlinks in `.claude/skills/`; symlinks survive "Use this template", the release archive and Windows checkouts (where git may write symlinks as plain files) | Confirm AD-16; otherwise `init_library.py` copies the skills | Partly confirmed: symlinks survive git, GitHub archives and Linux, macOS and hosted Windows checkouts; a symlink-less Windows checkout breaks skill discovery. Real symlink and template flow carried to the start of P3. **[Test]** |
++| V-10 | `CLAUDE.md` imports and Markdown links resolve to files whose names contain spaces (`%20` or angle-bracket link targets), including from `docs/development/` subfolders | Confirm the file naming in `docs/development/` (section 6). First check: open Claude Code in the template repository and ask for a summary of the SRS | `CLAUDE.md` imports with spaces do not load; the backslash-escaped form does (with hyphens, nested folders, nested imports). **[Test]** |
++| V-12 | Reproducible archive: the same tag rebuilt on Linux, macOS and Windows, on Python 3.11 and 3.14, gives the same SHA-256 (tarfile and gzip settings in I-12) | Confirm I-12 and W-12 step 5 | Tar identical across systems and Python 3.11 and 3.14; tar.gz differs under zlib-ng. **[Test]** |
++| V-13 | poethepoet tasks run unchanged on Windows, macOS and Linux; `uv run poe install` works on a fresh clone; `repo: local` pre-commit hooks run through `uv run` on all three | Confirm I-16, I-17 | Confirmed on Windows, macOS, Linux and Python 3.11 and 3.14. **[Test]** |
++| V-11 | How OKF derives a trust tier from `verified`: from the latest entry or any entry, and which non-human actor prefix denotes machine confirmation | Confirm the I-08 `verified` mapping | Confirmed: tier from any `human:` entry; `process:` is the convention for non-human actors. **[Doc]** |
+ 
+ ## 16. Changes applied to the SRS
+ 
