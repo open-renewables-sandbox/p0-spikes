@@ -11,18 +11,18 @@ def sub1(old, repl):
 
 # --- section 1
 sub1("Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55, and effort is re-estimated at the end of P0.",
-     "Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55; at the end of P0 (2026-10-28) the remaining effort for P1 to P4 is re-estimated at 31–46 person-days (section 14).")
+     "Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55; at the end of P0 (2026-10-28) the remaining effort for P1 to P4 is re-estimated at 30.5–45.5 person-days (section 14).")
 sub1("Thirteen behaviours are not yet verified and are scheduled as spikes before build (section 15).",
-     "Thirteen behaviours were scheduled as spikes before build (section 15); nine are answered, three (V-05, V-07, V-09) are partly answered and V-06 is carried, each carried part to a named gate (section 14).")
+     "Thirteen behaviours were scheduled as spikes before build (section 15); ten are answered, two (V-05, V-07) are partly answered and V-06 is carried, each carried part to a named gate (section 14).")
 
 # --- section 14 intro and rows
 sub1("the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort is re-estimated at the P0 exit (DDR QA-45).",
-     "the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort was re-estimated at the P0 exit on 2026-10-28 (DDR QA-45): the table below carries the revised figures for P1 to P3, 31–46 person-days for P1 to P4 in total **[Inf]**. The basis is in the P0 re-estimate; the largest uncertainty is P1, which no spike exercised.")
+     "the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort was re-estimated at the P0 exit on 2026-10-28 (DDR QA-45): the table below carries the revised figures for P1 to P3, 30.5–45.5 person-days for P1 to P4 in total **[Inf]**. The basis is in the P0 re-estimate; the largest uncertainty is P1, which no spike exercised.")
 sub1("| 2–3 | Each V-item answered; generator decided; design and estimate updated |",
      "| 2–3 | Done 2026-10-28: each V-item answered or carried to a named gate; generator decided (ADR-001); design and estimate updated |")
 sub1("| 10–15 | All finding codes tested; v0.1.0 (alpha) |", "| 11–16 | All finding codes tested; v0.1.0 (alpha) |")
 sub1("| 8–12 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |",
-     "| 10–15 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |")
+     "| 9.5–14.5 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |")
 sub1("| 4–6 | v0.5.0 (beta) |", "| 5–7 | v0.5.0 (beta) |")
 
 carried = """
@@ -33,7 +33,6 @@ Verification items carried past P0 (decided 2026-10-28; each has a gate, and the
 | V-05 | App "always" bypass on a protected `main` (5a); approval, stale approval and review `commit_id` API shape (5c) | Before `revision.yml` is written, at the start of P2 |
 | V-06 | Second person times W-01: platform steps first, then the whole | End of P2 (platform steps); P4 (full, FR6.1) |
 | V-07 | Cloudflare Pages access-policy limits on the free plan; immutable releases on a private repository | Only if a library wants a private preview or release; otherwise none |
-| V-09 | A real symlink against Claude Code; "Use this template" keeps the symlink | Start of P3; the copy fallback decision comes before P2 |
 """
 sub1("P1 starts only when the SRS is aligned with this document (DDR QA-35; done 25 October 2026).",
      "P1 starts only when the SRS is aligned with this document (DDR QA-35; done 25 October 2026)." + carried)
@@ -48,7 +47,7 @@ outcomes = {
  "V-06": "Carried (section 14): platform steps end of P2, full timing in P4.",
  "V-07": "Immutable releases confirmed on Free for a public repository. Private repository and Cloudflare limits carried. **[Test]**",
  "V-08": "Confirmed: one script, the same one the Action runs; no finding codes, so mapping is by message text; offset-less datetimes pass. **[Test]**",
- "V-09": "Partly confirmed: symlinks survive git, GitHub archives and Linux, macOS and hosted Windows checkouts; a symlink-less Windows checkout breaks skill discovery. Real symlink and template flow carried to the start of P3. **[Test]**",
+ "V-09": "Answered: symlinks survive git, GitHub archives and Linux, macOS and hosted Windows checkouts; a symlink-less Windows checkout breaks Claude Code skill discovery. Owner decision 2026-10-30: provider-neutral core with an optional adapter instead of committed symlinks (P-8, ADR pending). **[Test]**",
  "V-10": "`CLAUDE.md` imports with spaces do not load; the backslash-escaped form does (with hyphens, nested folders, nested imports). **[Test]**",
  "V-11": "Confirmed: tier from any `human:` entry; `process:` is the convention for non-human actors. **[Doc]**",
  "V-12": "Tar identical across systems and Python 3.11 and 3.14; tar.gz differs under zlib-ng. **[Test]**",

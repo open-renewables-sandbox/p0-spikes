@@ -23,7 +23,7 @@ Not triggered: P-3 (AD-14 holds), P-4 (four-space rule holds), P-6 (immutable re
 
 ## P-2 Re-estimate
 
-`re-estimate.md`: remaining P1 to P4 effort 31–46 person-days, programme 33.5–49.5, inside QA-45's 35–55. Form: edit SDD §1 and §14 (in the diff) and a DDR change-log row citing QA-45.
+`re-estimate.md`: remaining P1 to P4 effort 30.5–45.5 person-days, programme 33–49, overlapping QA-45's 35–55. Form: edit SDD §1 and §14 (in the diff) and a DDR change-log row citing QA-45.
 
 ## P-5 Commit-to-pull-request lookup lags the push
 
@@ -40,6 +40,25 @@ Not triggered: P-3 (AD-14 holds), P-4 (four-space rule holds), P-6 (immutable re
 - (b) As (a), documenting Developer Mode and `core.symlinks=true` instead of a copy path.
 - (c) Always copy into `.claude/skills/` and keep a sync check.
 **Recommendation:** (n), because it matches the principle and is the least code; keep the adapter outside the committed layout. **Unverified:** that a given runtime reads `AGENTS.md` on its own and then follows a skill pointer reliably. Only Claude Code could be tried here, and in V-10a its `AGENTS.md` imports loaded through `CLAUDE.md`, not on their own; for other runtimes the evidence would be documentation. A small spike (fresh session in p0-spikes, `AGENTS.md` pointer, no `CLAUDE.md`, no `.claude/skills`) would show it for Claude Code. **Consequence of (n):** AD-16 is superseded (its alternatives list already rejects product-specific frontmatter); SDD §6 drops `.claude/skills/`; W-10 and the V-09 carried item (real symlink, "Use this template") fall away; FR7.1's acceptance ("work on the pilot library without edits") must be shown through `AGENTS.md`.
+
+**Owner decision, 2026-10-30: option (n)**, without the pointer spike. The ADR text below stays Proposed until the owner approves it.
+
+### Proposed ADR (number assigned on approval): `ADR-NNN-provider-neutral-skills.md`
+
+**Status:** Proposed. **Supersedes:** AD-16. Links: none (no RFC).
+
+**Context.** AD-16 placed agent skills in `.agents/skills/` and added `.claude/skills/<name>` symlinks so that Claude Code discovers them. V-09 (2026-10-27): the symlinks survive git, GitHub source archives and Linux, macOS and hosted Windows checkouts, but a checkout with `core.symlinks=false` turns them into text files and Claude Code then does not list the skill; a plain copy and a directory junction work. The owner's starting principle (2026-10-30) is that the repository is AI-provider agnostic; SRS NFR2 and FR7.1 already point that way.
+
+**Decision.** The committed layout is provider-neutral: `AGENTS.md` is the single agent entry point and names the skills; skills live only in `.agents/skills/` in the Agent Skills format with the six specification frontmatter fields. No `.claude/` directory and no provider-specific file is part of the template or of a library, except the template-only `CLAUDE.md`, which `init_library.py` removes. Provider-specific discovery (for example Claude Code's `.claude/skills/`) is an optional adapter: documented in the README, created by one command or task in the user's own checkout, and not committed.
+
+**Consequences.**
+- AD-16 is superseded. SDD §6 drops `.claude/skills/` and the symlink text; C-08's sentence about symlinks goes; W-10 needs no symlink or copy case.
+- `init_library.py` has no copy path for skills (P2 effort falls by about 0.5 to 1 day, with 0.1 to 0.25 added for the adapter documentation and command).
+- Claude Code does not list the skills automatically until the adapter is run; an agent reaches them through `AGENTS.md`. Whether each runtime reads `AGENTS.md` on its own, and follows a skill pointer reliably, is **not verified**: Claude Code was not tested alone, and no other runtime was tested.
+- FR7.1's acceptance ("both skills work on the pilot library without edits") is shown in P4 through `AGENTS.md`, and separately with the adapter for Claude Code.
+- V-09's carried items (real symlink, "Use this template" keeps the symlink) are dropped.
+
+**Alternatives.** Keep the symlinks (breaks on Windows without symlink rights); symlinks with a copy fallback in `init_library.py` (two behaviours, drift risk in copies); always copy with a sync check (duplicate files); a product plugin manifest (needs an install step; remains available later).
 
 ## P-9 `CLAUDE.md` import form
 

@@ -1,8 +1,8 @@
-# Proposed edits to SDD sections 1, 14 and 15 (P0 exit, 2026-10-28). NOT APPLIED.
+# Proposed edits to SDD sections 1, 14 and 15 (P0 exit, 2026-10-28; updated 2026-10-30 for P-8). NOT APPLIED.
 # Base: the SDD as committed on main of open-renewables/okf-library-template (3c720fb).
 # Apply, after approval, from the template repository root with: git apply exit/sdd-s1-s14-s15.diff
 # Not in this diff: AD-13, C-07, I-13 and section 1 item 6 (wording follows ADR-001 on approval);
-# I-01, I-08, I-12, W-05 and section 6 (each follows its own proposed entry, see proposed-entries.md).
+# AD-16, C-08, section 6 and W-10 (follow the P-8 ADR); I-01, I-08, I-12, W-05 (each follows its own entry, see proposed-entries.md).
 diff --git "a/docs/development/architecture/OKF Library Template - Software Design Document.md" "b/docs/development/architecture/OKF Library Template - Software Design Document.md"
 --- "a/docs/development/architecture/OKF Library Template - Software Design Document.md"
 +++ "b/docs/development/architecture/OKF Library Template - Software Design Document.md"
@@ -11,19 +11,19 @@ diff --git "a/docs/development/architecture/OKF Library Template - Software Desi
  7. **Two operating modes.** A library declares `platform: github` or `platform: git-local`. Platform behaviour sits in adapters; in `git-local` mode the library runs on git and Python alone, with provenance from commit trailers, and can later move to GitHub without rewriting history (AD-19, W-12). The same `uv run poe <task>` commands run checks locally and in CI (AD-20).
  
 -Build plan (section 14): verification spikes, core tooling, CI and governance, site, release and skills, then a pilot. The template is released as v1.0.0 (stable) only when the pilot gate passes; downstream libraries, starting with the RE risk library, are built from template v1.0.0 or later. Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55, and effort is re-estimated at the end of P0.
-+Build plan (section 14): verification spikes, core tooling, CI and governance, site, release and skills, then a pilot. The template is released as v1.0.0 (stable) only when the pilot gate passes; downstream libraries, starting with the RE risk library, are built from template v1.0.0 or later. Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55; at the end of P0 (2026-10-28) the remaining effort for P1 to P4 is re-estimated at 31–46 person-days (section 14).
++Build plan (section 14): verification spikes, core tooling, CI and governance, site, release and skills, then a pilot. The template is released as v1.0.0 (stable) only when the pilot gate passes; downstream libraries, starting with the RE risk library, are built from template v1.0.0 or later. Effort was estimated at 27–41 person-days for one maintainer; the review of 25 October 2026 estimated 35–55; at the end of P0 (2026-10-28) the remaining effort for P1 to P4 is re-estimated at 30.5–45.5 person-days (section 14).
  
 -Thirteen behaviours are not yet verified and are scheduled as spikes before build (section 15). The design documents live in the template's `docs/development/` folder, which is template-only (AD-21). The SRS was aligned with this document on 25 October 2026 (section 16).
-+Thirteen behaviours were scheduled as spikes before build (section 15); nine are answered, three (V-05, V-07, V-09) are partly answered and V-06 is carried, each carried part to a named gate (section 14). The design documents live in the template's `docs/development/` folder, which is template-only (AD-21). The SRS was aligned with this document on 25 October 2026 (section 16).
++Thirteen behaviours were scheduled as spikes before build (section 15); ten are answered, two (V-05, V-07) are partly answered and V-06 is carried, each carried part to a named gate (section 14). The design documents live in the template's `docs/development/` folder, which is template-only (AD-21). The SRS was aligned with this document on 25 October 2026 (section 16).
  
  ## 2. Scope and document relationships
  
-@@ -889,18 +889,27 @@ NFR5 (content style) is an authoring rule enforced by review and has no componen
+@@ -889,18 +889,26 @@ NFR5 (content style) is an authoring rule enforced by review and has no componen
  
  ## 14. Build and release plan
  
 -The template is built and released to a stable version before any downstream library starts. Effort is indicative, for one maintainer, in person-days **[Inf]**. The figures below are the original estimate (27–41 in total), with P2 raised by 2–3 days for the `git-local` adapter and W-12 (QA-58 to QA-61); the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort is re-estimated at the P0 exit (DDR QA-45).
-+The template is built and released to a stable version before any downstream library starts. Effort is indicative, for one maintainer, in person-days **[Inf]**. The figures below are the original estimate (27–41 in total), with P2 raised by 2–3 days for the `git-local` adapter and W-12 (QA-58 to QA-61); the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort was re-estimated at the P0 exit on 2026-10-28 (DDR QA-45): the table below carries the revised figures for P1 to P3, 31–46 person-days for P1 to P4 in total **[Inf]**. The basis is in the P0 re-estimate; the largest uncertainty is P1, which no spike exercised.
++The template is built and released to a stable version before any downstream library starts. Effort is indicative, for one maintainer, in person-days **[Inf]**. The figures below are the original estimate (27–41 in total), with P2 raised by 2–3 days for the `git-local` adapter and W-12 (QA-58 to QA-61); the review of 25 October 2026 estimated 35–55, mainly for P1 and P2, and effort was re-estimated at the P0 exit on 2026-10-28 (DDR QA-45): the table below carries the revised figures for P1 to P3, 30.5–45.5 person-days for P1 to P4 in total **[Inf]**. The basis is in the P0 re-estimate; the largest uncertainty is P1, which no spike exercised.
  
  | Phase | Content | Effort | Exit |
  | --- | --- | --- | --- |
@@ -34,7 +34,7 @@ diff --git "a/docs/development/architecture/OKF Library Template - Software Desi
 -| P3 Site, release, skills | `mkdocs.yml` or the chosen generator's configuration; `site.yml`; `release.yml` with the revision gate and `build_bundle`; both skills; `AGENTS.md`, `GOVERNANCE.md`, `README.md`, `NOTICE` | 4–6 | v0.5.0 (beta) |
 +| P0 Verification | Spikes V-01 to V-13 in a scratch repository and scratch organisation, separate from the template repository because V-05 and V-07 change rulesets and release settings; site generator decision (V-03, V-04); re-estimate | 2–3 | Done 2026-10-28: each V-item answered or carried to a named gate; generator decided (ADR-001); design and estimate updated |
 +| P1 Core tooling | `pyproject.toml` with tasks, ruff, mypy, pytest and coverage settings; `.python-version`; `.pre-commit-config.yaml`; `docs/development/` scaffold; `okfprofile`; checks 1–6, change rules and publishing pre-check; vendored okf-skills; `new_concept`, `renumber`, `build_indexes`; fixtures and tests | 11–16 | All finding codes tested; v0.1.0 (alpha) |
-+| P2 CI and governance | `.github/CODEOWNERS`; `validate.yml` with base-branch tooling, then `validate` added as a required check on the `main` ruleset; `revision.yml` and `write_revision` with catch-up, `stale-report.yml`; issue forms; pull request template; `init_library`, `setup_repo` including `--promote`; instantiation self-test (W-10) for both platforms; `git_local` adapter, `release.py`, reproducible archives and a W-12 rehearsal; gitleaks and pip-audit jobs; Python matrix; GitHub App | 10–15 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |
++| P2 CI and governance | `.github/CODEOWNERS`; `validate.yml` with base-branch tooling, then `validate` added as a required check on the `main` ruleset; `revision.yml` and `write_revision` with catch-up, `stale-report.yml`; issue forms; pull request template; `init_library`, `setup_repo` including `--promote`; instantiation self-test (W-10) for both platforms; `git_local` adapter, `release.py`, reproducible archives and a W-12 rehearsal; gitleaks and pip-audit jobs; Python matrix; GitHub App | 9.5–14.5 | Each approval and tier case recorded correctly in a scratch library, including a dropped run |
 +| P3 Site, release, skills | `mkdocs.yml` or the chosen generator's configuration; `site.yml`; `release.yml` with the revision gate and `build_bundle`; both skills; `AGENTS.md`, `GOVERNANCE.md`, `README.md`, `NOTICE` | 5–7 | v0.5.0 (beta) |
  | P4 Pilot and hardening | Instantiate a pilot library; author about 20 concepts of its primary type with scope notes, vocabulary values and glossary entries; second person times W-01; agent run | 5–8 | Stable gate met; v1.0.0 |
  
@@ -46,12 +46,11 @@ diff --git "a/docs/development/architecture/OKF Library Template - Software Desi
 +| V-05 | App "always" bypass on a protected `main` (5a); approval, stale approval and review `commit_id` API shape (5c) | Before `revision.yml` is written, at the start of P2 |
 +| V-06 | Second person times W-01: platform steps first, then the whole | End of P2 (platform steps); P4 (full, FR6.1) |
 +| V-07 | Cloudflare Pages access-policy limits on the free plan; immutable releases on a private repository | Only if a library wants a private preview or release; otherwise none |
-+| V-09 | A real symlink against Claude Code; "Use this template" keeps the symlink | Start of P3; the copy fallback decision comes before P2 |
 +
  
  Template v1.0.0 (stable) gate:
  
-@@ -913,21 +922,21 @@ Template v1.0.0 (stable) gate:
+@@ -913,21 +921,21 @@ Template v1.0.0 (stable) gate:
  
  ## 15. Verification items
  
@@ -80,7 +79,7 @@ diff --git "a/docs/development/architecture/OKF Library Template - Software Desi
 +| V-06 | Second person performs W-01 end to end, including the App | FR6.1 measured | Carried (section 14): platform steps end of P2, full timing in P4. |
 +| V-07 | Immutable releases on GitHub Free; Cloudflare Pages access policy limits on the free plan | Confirm C-10 and alpha or beta options | Immutable releases confirmed on Free for a public repository. Private repository and Cloudflare limits carried. **[Test]** |
 +| V-08 | okf-skills mapping of its findings to `OKF1xx`, its behaviour on generated `index.md` files, and running the vendored validator outside the Action | Confirm AD-08 integration | Confirmed: one script, the same one the Action runs; no finding codes, so mapping is by message text; offset-less datetimes pass. **[Test]** |
-+| V-09 | Claude Code discovers skills through per-skill symlinks in `.claude/skills/`; symlinks survive "Use this template", the release archive and Windows checkouts (where git may write symlinks as plain files) | Confirm AD-16; otherwise `init_library.py` copies the skills | Partly confirmed: symlinks survive git, GitHub archives and Linux, macOS and hosted Windows checkouts; a symlink-less Windows checkout breaks skill discovery. Real symlink and template flow carried to the start of P3. **[Test]** |
++| V-09 | Claude Code discovers skills through per-skill symlinks in `.claude/skills/`; symlinks survive "Use this template", the release archive and Windows checkouts (where git may write symlinks as plain files) | Confirm AD-16; otherwise `init_library.py` copies the skills | Answered: symlinks survive git, GitHub archives and Linux, macOS and hosted Windows checkouts; a symlink-less Windows checkout breaks Claude Code skill discovery. Owner decision 2026-10-30: provider-neutral core with an optional adapter instead of committed symlinks (P-8, ADR pending). **[Test]** |
 +| V-10 | `CLAUDE.md` imports and Markdown links resolve to files whose names contain spaces (`%20` or angle-bracket link targets), including from `docs/development/` subfolders | Confirm the file naming in `docs/development/` (section 6). First check: open Claude Code in the template repository and ask for a summary of the SRS | `CLAUDE.md` imports with spaces do not load; the backslash-escaped form does (with hyphens, nested folders, nested imports). **[Test]** |
 +| V-12 | Reproducible archive: the same tag rebuilt on Linux, macOS and Windows, on Python 3.11 and 3.14, gives the same SHA-256 (tarfile and gzip settings in I-12) | Confirm I-12 and W-12 step 5 | Tar identical across systems and Python 3.11 and 3.14; tar.gz differs under zlib-ng. **[Test]** |
 +| V-13 | poethepoet tasks run unchanged on Windows, macOS and Linux; `uv run poe install` works on a fresh clone; `repo: local` pre-commit hooks run through `uv run` on all three | Confirm I-16, I-17 | Confirmed on Windows, macOS, Linux and Python 3.11 and 3.14. **[Test]** |
