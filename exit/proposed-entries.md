@@ -9,7 +9,7 @@ Status: **all Proposed; nothing is written to `adr/`, the DDR, the SDD, the SRS 
 | P-1 | Site generator | V-03, V-04 | ADR-001 | Approve text | P3 |
 | P-2 | Re-estimate | P0 exit | SDD edit + change-log row | Approve | — |
 | P-5 | W-05 commit-to-PR lookup can lag | V-05 | SDD edit (W-05, C-03 `platforms`) | Approve | P2 |
-| P-8 | Skills on Windows without symlinks | V-09 | ADR amending AD-16 | **Decide** | P2 `init_library.py` |
+| P-8 | Skills without a provider-specific shim (revised 2026-10-30: provider-neutral core, Claude Code discovery as an optional adapter) | V-09 | ADR superseding AD-16 | **Decide** | P2 `init_library.py` |
 | P-9 | `CLAUDE.md` import form | V-10 | ADR + `CLAUDE.md` edit | Approve | P1 start |
 | P-10 | `ci:` to `process:` in the `verified` mapping | V-11 | SDD edit (I-08) | Optional | P2 |
 | P-11 | Archive checksum across zlib implementations | V-12 | ADR amending QA-61, I-12 | **Decide** | P2 `release.py` |
@@ -33,7 +33,13 @@ Not triggered: P-3 (AD-14 holds), P-4 (four-space rule holds), P-6 (immutable re
 ## P-8 Skills where symlinks are unavailable (amends AD-16)
 
 **Context.** V-09: `.claude/skills/<name>` as a git symlink survives git, GitHub archives and Linux, macOS and hosted Windows checkouts, but on a Windows checkout with `core.symlinks=false` it becomes a text stub and Claude Code does not list the skill; a plain copy and a directory junction work.
-**Options.** (a) `init_library.py` writes copies into `.claude/skills/` when symlinks are unavailable (the fallback SDD §15 names); (b) document Developer Mode and `core.symlinks=true` as a prerequisite; (c) always copy, and have a task re-sync them. **Recommendation:** (a), with a W-10 case for it, and (b) stated in the README. **Consequence:** P2 `init_library.py` gains a copy path; the template keeps the symlinks.
+**Owner principle (2026-10-30).** The repository is AI-provider agnostic, at least as the starting point. NFR2 already says requirements rely on capabilities common to mainstream tools and FR7.1 asks for the Agent Skills format; the one product-specific element in the committed layout is `.claude/skills/` (AD-16), alongside the template-only `CLAUDE.md`.
+**Revised options** (the earlier recommendation, option (a) below, is superseded by this principle until the owner decides):
+- **(n) Neutral core, no committed provider shim.** `AGENTS.md` is the single entry point and names the skills in `.agents/skills/`; no `.claude/` folder in the template or in libraries. Claude Code's native discovery becomes an **optional adapter** that a user adds (a documented one-line command or a `poe` task that creates the link or copy in their own checkout, not committed). Removes the Windows problem and P-8's copy path. Cost: no automatic skill discovery in Claude Code until the adapter is run, and no discovery signal for the model otherwise.
+- (a) Keep `.claude/skills/` symlinks in the repository, with `init_library.py` copying where symlinks are unavailable.
+- (b) As (a), documenting Developer Mode and `core.symlinks=true` instead of a copy path.
+- (c) Always copy into `.claude/skills/` and keep a sync check.
+**Recommendation:** (n), because it matches the principle and is the least code; keep the adapter outside the committed layout. **Unverified:** that a given runtime reads `AGENTS.md` on its own and then follows a skill pointer reliably. Only Claude Code could be tried here, and in V-10a its `AGENTS.md` imports loaded through `CLAUDE.md`, not on their own; for other runtimes the evidence would be documentation. A small spike (fresh session in p0-spikes, `AGENTS.md` pointer, no `CLAUDE.md`, no `.claude/skills`) would show it for Claude Code. **Consequence of (n):** AD-16 is superseded (its alternatives list already rejects product-specific frontmatter); SDD §6 drops `.claude/skills/`; W-10 and the V-09 carried item (real symlink, "Use this template") fall away; FR7.1's acceptance ("work on the pilot library without edits") must be shown through `AGENTS.md`.
 
 ## P-9 `CLAUDE.md` import form
 
