@@ -1,0 +1,2 @@
+pr stale commit A
+pr stale commit B

@@ -1,0 +1,38 @@
+name: p2-s1-probe
+
+# P2 step 1 (V-05 5a, 5c, lookup lag). Sandbox only; synthetic content under p2-s1/.
+# The case is the branch suffix: push p2-s1/run-5a-push, p2-s1/run-5c-review or p2-s1/run-lookup.
+on:
+  push:
+    branches: ["p2-s1/run-*"]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: app
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ steps.app.outputs.token }}
+      - name: Probe
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          ACTIONS_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CASE: ${{ github.ref_name }}
+        run: bash p2-s1/probe.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: p2-s1-${{ github.run_id }}
+          path: out/
